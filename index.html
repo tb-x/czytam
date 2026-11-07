@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#4c7cf0">
+<title>Czytam i robię – gra w czytanie</title>
+<meta name="description" content="Gra w czytanie dla 5-latków: przeczytaj krótkie polecenie i zrób, o co prosi.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Czytam">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<a id="home" href="../index.html" aria-label="Wszystkie gry" title="Wszystkie gry"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9.8V20h12V9.8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M10 20v-5.5h4V20" fill="currentColor"/></svg></a>
+
+<div id="app">
+  <header class="bar">
+    <div id="progress" aria-label="Zadania w rundzie"></div>
+    <button id="level-btn" class="pill" type="button" title="Zmień poziom">POZIOM 1</button>
+  </header>
+
+  <section id="ask">
+    <p id="sentence" aria-live="polite"></p>
+    <button id="say" type="button" aria-label="Przeczytaj na głos" title="Przeczytaj na głos" hidden>🔊</button>
+  </section>
+
+  <section id="stage" aria-label="Plansza"></section>
+
+  <section id="answers"></section>
+</div>
+
+<div id="cheer" aria-hidden="true"></div>
+
+<div id="start" class="overlay">
+  <div class="panel">
+    <div class="logo" aria-hidden="true">📖</div>
+    <h1>CZYTAM<br>I ROBIĘ</h1>
+    <p class="label">POZIOM</p>
+    <div id="levels"></div>
+    <button id="play" class="big" type="button">GRAJ ▶</button>
+  </div>
+</div>
+
+<div id="end" class="overlay" hidden>
+  <div class="panel">
+    <div class="logo" aria-hidden="true">🏆</div>
+    <h1>BRAWO!</h1>
+    <div id="end-stars"></div>
+    <p id="end-level" class="label"></p>
+    <button id="again" class="big" type="button">JESZCZE RAZ ▶</button>
+  </div>
+</div>
+
+<script src="haptics.js?v=1"></script>
+<script src="game.js?v=1"></script>
+<script>
+// Gra bez internetu: sw.js zapisuje tę stronę. Po wczytaniu wysyłamy mu listę wszystkich plików, których strona
+// użyła (skrypty, style, czcionki), żeby też działały offline. Tam, gdzie się nie da (np. file://), po cichu nic nie robi.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(() => navigator.serviceWorker.ready).then((reg) => {
+    const send = () => reg.active && reg.active.postMessage({ cache: [location.href, ...performance.getEntriesByType('resource').map((r) => r.name)] });
+    send(); setTimeout(send, 5000); setTimeout(send, 20000);
+  }).catch(() => {});
+  // Gdy sw.js da znać, że właśnie pobrał nowszą wersję tej strony, przeładuj ją raz: od razu, jeśli nikt jeszcze nie
+  // dotknął ekranu ani klawisza, a jeśli tak, to dopiero po powrocie do strony po 5+ minutach, żeby nie przerwać gry.
+  // Znacznik w sessionStorage nie pozwala przeładować drugi raz w ciągu 30 s.
+  let started = false, newer = false, hiddenAt = 0;
+  addEventListener('pointerdown', () => { started = true; }, true);
+  addEventListener('keydown', () => { started = true; }, true);
+  const reload = () => {
+    const key = 'tbx-sw-reload:' + location.pathname;
+    try { if (Date.now() - (+sessionStorage.getItem(key) || 0) < 30000) return; sessionStorage.setItem(key, Date.now()); } catch { return; }
+    location.reload();
+  };
+  navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.updated) { newer = true; if (!started) reload(); } });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) hiddenAt = Date.now();
+    else if (newer && hiddenAt && Date.now() - hiddenAt >= 5 * 60 * 1000) reload();
+  });
+}
+</script>
+</body>
+</html>

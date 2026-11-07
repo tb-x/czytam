@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "czytam",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5240"],
+      "port": 5240
+    }
+  ]
+}
