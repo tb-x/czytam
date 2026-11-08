@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" crossorigin="anonymous" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 <a id="home" href="../index.html" aria-label="Wszystkie gry" title="Wszystkie gry"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9.8V20h12V9.8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M10 20v-5.5h4V20" fill="currentColor"/></svg></a>
@@ -30,6 +30,7 @@
   <section id="ask">
     <p id="sentence" aria-live="polite"></p>
     <button id="say" type="button" aria-label="Przeczytaj na głos" title="Przeczytaj na głos" hidden>🔊</button>
+    <button id="peek" type="button" aria-label="Pokaż polecenie" title="Pokaż polecenie" hidden>👁</button>
   </section>
 
   <section id="stage" aria-label="Plansza"></section>
@@ -60,7 +61,7 @@
 </div>
 
 <script src="haptics.js?v=1"></script>
-<script src="game.js?v=1"></script>
+<script src="game.js?v=3"></script>
 <script>
 // Gra bez internetu: sw.js zapisuje tę stronę. Po wczytaniu wysyłamy mu listę wszystkich plików, których strona
 // użyła (skrypty, style, czcionki), żeby też działały offline. Tam, gdzie się nie da (np. file://), po cichu nic nie robi.
